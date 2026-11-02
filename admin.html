@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery Manager - Mehendi By Samrin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="images/logo.png">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #5A0E2D, #8B1E3F, #D4AF37);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            box-sizing: border-box;
+            color: white;
+        }
+        .container {
+            width: 100%;
+            max-width: 900px;
+        }
+        .header-area {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            width: 100%;
+        }
+        .header-area h1 {
+            margin: 0;
+            font-size: 28px;
+            color: #D4AF37;
+        }
+        .home-btn {
+            text-decoration: none;
+            color: white;
+            border: 2px solid #D4AF37;
+            padding: 8px 20px;
+            border-radius: 20px;
+            transition: 0.3s;
+            font-weight: 500;
+        }
+        .home-btn:hover {
+            background: #D4AF37;
+            color: #5A0E2D;
+        }
+        .upload-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .upload-card h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+        .file-drop-zone {
+            border: 2px dashed rgba(255, 255, 255, 0.4);
+            padding: 30px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .file-drop-zone:hover {
+            border-color: #D4AF37;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .file-drop-zone p {
+            margin: 0 0 15px;
+            color: rgba(255,255,255,0.8);
+        }
+        .file-input {
+            display: none;
+        }
+        .select-btn {
+            display: inline-block;
+            background: transparent;
+            border: 2px solid #D4AF37;
+            color: #D4AF37;
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .select-btn:hover {
+            background: #D4AF37;
+            color: #5A0E2D;
+        }
+        .upload-btn {
+            margin-top: 25px;
+            background: #D4AF37;
+            color: #5A0E2D;
+            border: none;
+            padding: 14px 40px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            width: 100%;
+            max-width: 250px;
+        }
+        .upload-btn:hover {
+            background: #fff;
+            color: #5A0E2D;
+            transform: translateY(-2px);
+        }
+        .upload-btn:active {
+            transform: translateY(0);
+        }
+        .manager-section h3 {
+            font-size: 22px;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+            padding-bottom: 10px;
+            color: #D4AF37;
+        }
+        .media-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .media-item {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            height: 180px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            background: rgba(0,0,0,0.2);
+        }
+        .media-item img, .media-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(220, 53, 69, 0.9);
+            border: none;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .delete-btn:hover {
+            background: rgba(220, 53, 69, 1);
+            transform: scale(1.1);
+        }
+        .empty-msg {
+            grid-column: 1 / -1;
+            text-align: center;
+            color: rgba(255,255,255,0.6);
+            padding: 40px;
+            font-style: italic;
+        }
+        #selectedCount {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #D4AF37;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-area">
+        <h1>Gallery Manager</h1>
+        <a href="index.html" class="home-btn">View Website</a>
+    </div>
+
+    <div class="upload-card">
+        <h2>Upload Photos & Videos</h2>
+        <div class="file-drop-zone" onclick="document.getElementById('mediaUpload').click()">
+            <p>Drag & drop your media files here or click to select</p>
+            <span class="select-btn">Choose Files</span>
+            <input type="file" id="mediaUpload" class="file-input" multiple accept="image/*,video/*" onchange="updateFileInfo()">
+            <div id="selectedCount"></div>
+        </div>
+        <button class="upload-btn" onclick="saveMedia()">Upload to Gallery</button>
+    </div>
+
+    <div class="manager-section">
+        <h3>Current Gallery Items</h3>
+        <div id="mediaGrid" class="media-grid"></div>
+    </div>
+</div>
+
+<script>
+    function updateFileInfo() {
+        const input = document.getElementById("mediaUpload");
+        const countDiv = document.getElementById("selectedCount");
+        if (input.files.length > 0) {
+            countDiv.innerText = `${input.files.length} file(s) selected`;
+        } else {
+            countDiv.innerText = "";
+        }
+    }
+
+    async function saveMedia() {
+        const input = document.getElementById("mediaUpload");
+        const files = input.files;
+        if (files.length === 0) {
+            alert("Please select files first!");
+            return;
+        }
+
+        let media = JSON.parse(localStorage.getItem("gallery")) || [];
+
+        const readAndSave = (file) => {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    media.push({
+                        type: file.type,
+                        src: e.target.result
+                    });
+                    resolve();
+                };
+                reader.readAsDataURL(file);
+            });
+        };
+
+        for (let file of files) {
+            await readAndSave(file);
+        }
+
+        localStorage.setItem("gallery", JSON.stringify(media));
+        alert("Uploaded Successfully!");
+        input.value = "";
+        document.getElementById("selectedCount").innerText = "";
+        renderGallery();
+    }
+
+    function renderGallery() {
+        const grid = document.getElementById("mediaGrid");
+        grid.innerHTML = "";
+        
+        let media = JSON.parse(localStorage.getItem("gallery")) || [];
+
+        if (media.length === 0) {
+            grid.innerHTML = '<div class="empty-msg">No custom gallery items uploaded yet. Default items are showing on the home page.</div>';
+            return;
+        }
+
+        media.forEach((item, index) => {
+            const wrapper = document.createElement("div");
+            wrapper.className = "media-item";
+
+            if (item.type.startsWith("image")) {
+                const img = document.createElement("img");
+                img.src = item.src;
+                img.alt = "Gallery Image";
+                wrapper.appendChild(img);
+            } else {
+                const video = document.createElement("video");
+                video.src = item.src;
+                video.controls = true;
+                wrapper.appendChild(video);
+            }
+
+            const delBtn = document.createElement("button");
+            delBtn.className = "delete-btn";
+            delBtn.innerHTML = "✖";
+            delBtn.onclick = function() {
+                deleteMedia(index);
+            };
+
+            wrapper.appendChild(delBtn);
+            grid.appendChild(wrapper);
+        });
+    }
+
+    function deleteMedia(index) {
+        if (confirm("Are you sure you want to delete this item?")) {
+            let media = JSON.parse(localStorage.getItem("gallery")) || [];
+            media.splice(index, 1);
+            localStorage.setItem("gallery", JSON.stringify(media));
+            renderGallery();
+        }
+    }
+
+    // Initial render
+    renderGallery();
+</script>
+
+</body>
+</html>

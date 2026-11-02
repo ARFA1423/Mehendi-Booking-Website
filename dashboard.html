@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Dashboard - Mehendi By Samrin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="images/logo.png">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            background-color: #FFF8F0;
+            color: #333;
+            padding: 40px 10%;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .title-area h1 {
+            color: #5A0E2D;
+            font-size: 36px;
+            margin: 0 0 5px;
+        }
+        .title-area p {
+            margin: 0;
+            color: #666;
+        }
+        .logout-btn {
+            background: transparent;
+            border: 2px solid #5A0E2D;
+            color: #5A0E2D;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        .logout-btn:hover {
+            background: #5A0E2D;
+            color: white;
+        }
+        .top-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .stats-card {
+            background: #5A0E2D;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(90, 14, 45, 0.2);
+        }
+        .stats-card h3 {
+            margin: 0;
+            font-weight: 500;
+            font-size: 16px;
+            color: #f1f1f1;
+        }
+        .stats-card span {
+            font-size: 28px;
+            font-weight: bold;
+            color: #D4AF37;
+        }
+        .search-container input {
+            width: 100%;
+            max-width: 320px;
+            padding: 12px 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            outline: none;
+            transition: 0.3s;
+            font-family: 'Poppins', sans-serif;
+        }
+        .search-container input:focus {
+            border-color: #5A0E2D;
+            box-shadow: 0 0 8px rgba(90, 14, 45, 0.1);
+        }
+        .table-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            overflow-x: auto;
+            border: 1px solid #eee;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+        th {
+            background-color: #5A0E2D;
+            color: white;
+            font-weight: 600;
+            text-align: left;
+            padding: 16px 20px;
+            font-size: 15px;
+        }
+        td {
+            padding: 16px 20px;
+            border-bottom: 1px solid #eee;
+            color: #555;
+            font-size: 15px;
+        }
+        tr:hover {
+            background-color: #FFFDFB;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .status-pending {
+            background-color: #FFF3CD;
+            color: #856404;
+        }
+        .status-confirmed {
+            background-color: #D4EDDA;
+            color: #155724;
+        }
+        .status-completed {
+            background-color: #E2E3E5;
+            color: #383D41;
+        }
+        .btn {
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            display: inline-block;
+            font-size: 13px;
+        }
+        .confirm-btn {
+            background: #28a745;
+            color: white;
+        }
+        .confirm-btn:hover {
+            background: #218838;
+            transform: translateY(-1px);
+        }
+        .complete-btn {
+            background: #17a2b8;
+            color: white;
+        }
+        .complete-btn:hover {
+            background: #138496;
+            transform: translateY(-1px);
+        }
+        .delete-btn {
+            background: #d9534f;
+            color: white;
+        }
+        .delete-btn:hover {
+            background: #c9302c;
+            transform: translateY(-1px);
+        }
+        .delete-btn:active, .confirm-btn:active, .complete-btn:active {
+            transform: translateY(0);
+        }
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+        }
+        @media(max-width: 768px) {
+            body {
+                padding: 20px 5%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="title-area">
+            <h1>Booking Dashboard</h1>
+            <p>Admin panel for managing appointments</p>
+        </div>
+        <a href="admin.html" class="logout-btn">Logout</a>
+    </header>
+
+    <div class="top-controls">
+        <div class="stats-card">
+            <h3>Total Bookings: <span id="count">0</span></h3>
+        </div>
+        <div class="search-container">
+            <input type="text" id="search" placeholder="Search Customer">
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Service</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Message</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="bookingTable">
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        let bookings = JSON.parse(localStorage.getItem("bookings")) || [];
+        
+        const countSpan = document.getElementById("count");
+        const table = document.getElementById("bookingTable");
+        const searchInput = document.getElementById("search");
+
+        function renderTable(data) {
+            table.innerHTML = "";
+            countSpan.innerText = data.length;
+
+            if (data.length === 0) {
+                table.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="empty-state">No appointments found.</td>
+                    </tr>
+                `;
+                return;
+            }
+
+            data.forEach((booking) => {
+                const globalIndex = bookings.indexOf(booking);
+                
+                let statusClass = "status-pending";
+                if (booking.status === "Confirmed") statusClass = "status-confirmed";
+                if (booking.status === "Completed") statusClass = "status-completed";
+
+                let actionButtons = "";
+                if (!booking.status || booking.status === "Pending") {
+                    actionButtons += `<button class="btn confirm-btn" onclick="updateStatus(${globalIndex}, 'Confirmed')">Confirm</button>`;
+                } else if (booking.status === "Confirmed") {
+                    actionButtons += `<button class="btn complete-btn" onclick="updateStatus(${globalIndex}, 'Completed')">Complete</button>`;
+                }
+                actionButtons += `<button class="btn delete-btn" onclick="deleteBooking(${globalIndex})">Delete</button>`;
+
+                table.innerHTML += `
+                    <tr>
+                        <td><strong>${escapeHTML(booking.name)}</strong></td>
+                        <td>${escapeHTML(booking.phone)}</td>
+                        <td>${escapeHTML(booking.service || 'Bridal Mehendi')}</td>
+                        <td>${escapeHTML(booking.date)}</td>
+                        <td><span class="status-badge ${statusClass}">${escapeHTML(booking.status || 'Pending')}</span></td>
+                        <td>${escapeHTML(booking.message || '-')}</td>
+                        <td>${actionButtons}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        searchInput.addEventListener("input", (e) => {
+            const query = e.target.value.toLowerCase();
+            const filtered = bookings.filter(b => 
+                b.name.toLowerCase().includes(query) || 
+                b.phone.includes(query) || 
+                (b.service && b.service.toLowerCase().includes(query))
+            );
+            renderTable(filtered);
+        });
+
+        function updateStatus(index, newStatus) {
+            bookings[index].status = newStatus;
+            localStorage.setItem("bookings", JSON.stringify(bookings));
+            renderTable(bookings);
+        }
+
+        function deleteBooking(index) {
+            if(confirm("Are you sure you want to delete this booking?")) {
+                bookings.splice(index, 1);
+                localStorage.setItem("bookings", JSON.stringify(bookings));
+                renderTable(bookings);
+                searchInput.value = "";
+            }
+        }
+
+        function escapeHTML(str) {
+            if (!str) return '';
+            return str.replace(/[&<>'"]/g, 
+                tag => ({
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    "'": '&#39;',
+                    '"': '&quot;'
+                }[tag] || tag)
+            );
+        }
+
+        // Initial table load
+        renderTable(bookings);
+    </script>
+
+</body>
+</html>
